@@ -21,7 +21,7 @@ const $=document.querySelector.bind(document)
             isPlaying: false,
             isRandom:false,
             isRepeat:false,
-            isTimeUpdate:false,
+            isTimeUpdate:true,
             songs:[
                 {
                     name:'Độ tộc 2',
@@ -162,6 +162,7 @@ const $=document.querySelector.bind(document)
                         if(audio.duration){
                             const progressPercent = Math.floor(audio.currentTime / audio.duration *100)
                             progress.value= progressPercent
+                            progress.style.background = 'linear-gradient(to right, #ec1f55 0%, #ec1f55 ' + progressPercent + '%, #d3d3d3 ' + progressPercent + '%, #d3d3d3 100%)'
                         }
                         
                     }
@@ -169,10 +170,15 @@ const $=document.querySelector.bind(document)
                     _this.timeDuration()
                 }
                 // sử lý khi tua
-                progress.onchange=function(e){
-                  
-                    const seekTime=audio.duration /100 *e.target.value
-                    audio.currentTime = seekTime
+                progress.onmousedown = ()=>{
+                    _this.isTimeUpdate = false; //
+                    progress.onchange = (e) => {
+                        const seekTime = audio.duration / 100 * e.target.value;
+                        audio.currentTime = seekTime;
+                    }
+                }
+                progress.onmouseup = ()=> {
+                    _this.isTimeUpdate = true;
                 }
                 // forward and rewind on mobile
                 document.querySelector('#progress').addEventListener('touchstart', touchStart);
